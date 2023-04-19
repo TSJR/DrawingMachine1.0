@@ -49,7 +49,8 @@ function del_img() {
 }
 
 function upload_img() {
-    get_bw(document.querySelector("#color-image"));
+    let img =  document.querySelector("img");
+    get_bw(img);
 }
 
 upload_btn.addEventListener("click", open_dialog);
