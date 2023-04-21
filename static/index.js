@@ -25,15 +25,20 @@ function update_buttons(upload) {
 
 function update_img() {
     if (dialog.files.length > 0) {
-        while (img_area.firstChild) {
-            img_area.removeChild(img_area.firstChild);
-        }
         let file = dialog.files[0];
-        let image = document.createElement("img");
+        let image = new Image();
+        let canvas = document.querySelector("canvas");
         image.src = URL.createObjectURL(file);
-        image.style.width = "30vw";
-        image.id = "color-image"
-        img_area.appendChild(image);
+        canvas.style.width = "30vw";
+        let ctx = canvas.getContext("2d", { willReadFrequently: true });
+        image.onload = function(){
+            canvas.width = image.width;
+            canvas.height = image.height;
+            ctx.drawImage(image, 0, 0);
+        }
+
+        img_area.appendChild(canvas);
+
         update_buttons(false);
     }
     else {
@@ -42,15 +47,26 @@ function update_img() {
 }
 
 function del_img() {
-    while (img_area.firstChild) {
-        img_area.removeChild(img_area.firstChild);
-    }
+    let canvas = document.querySelector("canvas");
+    let ctx = canvas.getContext("2d", { willReadFrequently: true });
+    ctx.clearRect(0, 0, canvas.width, canvas.height);
+    canvas.height = 0;
+
     update_buttons(true);
 }
 
 function upload_img() {
-    let img =  document.querySelector("img");
-    get_bw(img);
+    let all = get_bw();
+
+    let img_data = all[0]
+    let obj_data = all[1];
+    let canvas = document.querySelector("canvas");
+    let ctx = canvas.getContext("2d", { willReadFrequently: true });
+
+    img_data = new ImageData(new Uint8ClampedArray(img_data), canvas.width);
+    ctx.putImageData(img_data, 0, 0);
+
+
 }
 
 upload_btn.addEventListener("click", open_dialog);
