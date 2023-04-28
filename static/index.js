@@ -1,4 +1,4 @@
-import {get_bw} from "./gen_coords.js";
+import {get_bw, get_bodies} from "./gen_coords.js";
 
 let dialog = document.querySelector("#file-select");
 let upload_btn = document.querySelector("#upload-img");
@@ -62,9 +62,12 @@ function upload_img() {
     let obj_data = all[1];
     let canvas = document.querySelector("canvas");
     let ctx = canvas.getContext("2d", { willReadFrequently: true });
-
     img_data = new ImageData(new Uint8ClampedArray(img_data), canvas.width);
     ctx.putImageData(img_data, 0, 0);
+
+    let bodies = get_bodies(obj_data);
+
+
 
 
 }
