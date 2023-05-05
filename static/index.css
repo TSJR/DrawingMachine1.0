@@ -57,4 +57,54 @@ footer button:hover {
     display: flex;
     flex-direction: row;
     justify-content: center;
+    margin-bottom: 1rem;
 }
+
+/*PROGRESS BAR*/
+
+:root {
+    --progress: 20%;
+}
+
+#bar-space {
+    width: 40rem;
+    height: 3rem;
+    background: rgb(150, 150, 150);
+    border-radius: 15px;
+
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+
+    padding: 7px;
+}
+
+#progress-bar {
+    height: 100%;
+    width: 10%;
+    background: linear-gradient(0deg, rgba(59,162,13,1) 1%, rgba(170,242,161,1) 58%, rgba(166,242,155,1) 59%, rgba(70,230,0,1) 86%);
+    border-radius: 10px;
+    transition: width 10ms linear;
+
+}
+
+#bar-area {
+    margin-top: auto;
+    margin-bottom: 1rem;
+
+    flex-direction: column;
+    align-items: center;
+    bottom: 10rem;
+    display: none;
+    position: absolute;
+    width: 100vw;
+}
+
+#bar-area > p {
+    align-self: center;
+    font-family: sans-serif;
+    font-weight: bold;
+    position: absolute;
+    margin-top: 20px;
+}
+

@@ -1,3 +1,4 @@
+import {progress_bar, progress_counter} from "./index.js";
 export class Pixel {
     constructor(row, col, color) {
         this.row = row;
@@ -107,12 +108,23 @@ function get_adjacent(pixels, checked, body, brightness, pixel) {
     return [to_return, new_checked];
 
 }
-export function get_bodies(obj_data) {
+function update_bar(size, i) {
+    progress_bar.style.width = `${Math.round(i / size * 100)}%`;
+    progress_counter.innerText = `${Math.round(i / size * 100)}%`;
+    if (i === size) {
+        progress_counter.innerText = `Done!`;
+    }
+}
+export var progress = 0;
+export async function get_bodies(obj_data) {
+    const sleep = ms => new Promise(res => setTimeout(res, ms));
     let i = 0;
     let checked = [];
     let to_check = []
     let cur_body = [];
     let bodies = [];
+
+    let size = obj_data.length * obj_data[0].length;
 
     for (let row = 0; row < obj_data.length; row++) {
         for (let col = 0; col < obj_data[0].length; col++) {
@@ -122,22 +134,25 @@ export function get_bodies(obj_data) {
                 i++;
                 let brightness = get_mapped(obj_data[row][col]);
                 //console.log(`brightness is ${(obj_data[row][col])}`);
-                cur_body.push(new Pixel(row, col, brightness));
+                cur_body.push([row, col, brightness]);
+                //NOT A NEW PIXEL
                 let raw = get_adjacent(obj_data, checked, cur_body, brightness, [row, col]);
                 let adjacents = raw[0];
                 checked = checked.concat(raw[1]);
                 //console.log(raw[1].length);
                 to_check = to_check.concat(adjacents);
 
-                if (i % 1000 === 0) {
-                    console.log(i);
+                if (i % 100 === 0 || i === size) {
+                    update_bar(size, i);
+                    await sleep(20);
                 }
 
                 while (to_check.length !== 0) {
                     let next_check = [];
                     for (let i = 0; i < to_check.length; i++) {
                         let check = to_check[i];
-                        cur_body.push(new Pixel(check[0], check[1], brightness));
+                        //NOT A NEW PIXEL
+                        cur_body.push([check[0][0], check[1][0], brightness]);
                         let raw = get_adjacent(obj_data, checked, cur_body, brightness, [check[0], check[1]]);
                         next_check = next_check.concat(raw[0]);
                         try {

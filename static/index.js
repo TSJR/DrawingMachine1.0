@@ -19,6 +19,7 @@ function update_buttons(upload) {
     else {
         send_btn.style.display = "none";
         del_btn.style.display = "none";
+        document.querySelector("#bar-area").style.display = "none";
         upload_btn.style.display = "inline-block";
     }
 }
@@ -29,7 +30,10 @@ function update_img() {
         let image = new Image();
         let canvas = document.querySelector("canvas");
         image.src = URL.createObjectURL(file);
-        canvas.style.width = "30vw";
+
+        canvas.style.width = "40vh";
+
+
         let ctx = canvas.getContext("2d", { willReadFrequently: true });
         image.onload = function(){
             canvas.width = image.width;
@@ -51,25 +55,42 @@ function del_img() {
     let ctx = canvas.getContext("2d", { willReadFrequently: true });
     ctx.clearRect(0, 0, canvas.width, canvas.height);
     canvas.height = 0;
-
+    document.querySelector("#bar-area").style.display = "none";
     update_buttons(true);
 }
+export let progress_bar
+export let progress_counter
+async function upload_img() {
+    console.log("bruh")
+    progress_bar = document.querySelector("#progress-bar");
+    progress_counter = document.querySelector("#bar-area > p");
+    document.querySelector("#bar-area").style.display = "flex";
 
-function upload_img() {
     let all = get_bw();
 
     let img_data = all[0]
     let obj_data = all[1];
     let canvas = document.querySelector("canvas");
-    let ctx = canvas.getContext("2d", { willReadFrequently: true });
+    let ctx = canvas.getContext("2d", {willReadFrequently: true});
     img_data = new ImageData(new Uint8ClampedArray(img_data), canvas.width);
     ctx.putImageData(img_data, 0, 0);
 
-    let bodies = get_bodies(obj_data);
+    let bodies = await get_bodies(obj_data);
+    console.log("sending data");
+    send_data(bodies);
 
+}
 
+function send_data(data) {
+    const jsonData = JSON.stringify(data, null, 2);
 
-
+    const file = new File([jsonData], 'data.json', { type: 'application/json' });
+    let formData = new FormData();
+    formData.append('file', file);
+    console.log(formData);
+    const request = new XMLHttpRequest();
+    request.open("POST", `/imgData`);
+    request.send(formData);
 }
 
 upload_btn.addEventListener("click", open_dialog);
