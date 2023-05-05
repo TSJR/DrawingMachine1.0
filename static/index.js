@@ -76,6 +76,8 @@ async function upload_img() {
     ctx.putImageData(img_data, 0, 0);
 
     let bodies = await get_bodies(obj_data);
+    bodies.push(obj_data.length);
+    bodies.push( obj_data[0].length);
     console.log("sending data");
     send_data(bodies);
 
