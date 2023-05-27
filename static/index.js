@@ -10,6 +10,7 @@ function open_dialog() {
     dialog.click();
 }
 
+// Making buttons appear/dissappear as necessary 
 function update_buttons(upload) {
     if (!upload) {
         send_btn.style.display = "inline-block";
@@ -24,6 +25,7 @@ function update_buttons(upload) {
     }
 }
 
+// Taking image and uploading it to screen
 function update_img() {
     if (dialog.files.length > 0) {
         let file = dialog.files[0];
@@ -50,6 +52,7 @@ function update_img() {
     }
 }
 
+// Deleting image
 function del_img() {
     let canvas = document.querySelector("canvas");
     let ctx = canvas.getContext("2d", { willReadFrequently: true });
@@ -60,8 +63,9 @@ function del_img() {
 }
 export let progress_bar
 export let progress_counter
+
+// Getting body data from image data
 async function upload_img() {
-    console.log("bruh")
     progress_bar = document.querySelector("#progress-bar");
     progress_counter = document.querySelector("#bar-area > p");
     document.querySelector("#bar-area").style.display = "flex";
@@ -78,7 +82,8 @@ async function upload_img() {
     let bodies = await get_bodies(obj_data);
     bodies.push(obj_data.length);
     bodies.push( obj_data[0].length);
-    console.log("sending data");
+    
+    // Sending body data
     send_data(bodies);
 
 }
@@ -90,7 +95,9 @@ function send_data(data) {
     let formData = new FormData();
     formData.append('file', file);
     console.log(formData);
-    const request = new XMLHttpRequest();
+    
+    // Sending file
+    const request = new XMLHttpReq uest();
     request.open("POST", `/imgData`);
     request.send(formData);
 }
